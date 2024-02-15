@@ -1,72 +1,63 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink , useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import { useEffect, useState } from "react";
 import { remove } from "../redux/slices/CartSlice";
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
-function Cart(product){
+function Cart() {
+    const { cart } = useSelector((state) => state);
+    const [totalAmount, setTotalAmount] = useState(0);
 
-    const {cart} = useSelector((state)=>state)
-    const [TotalAmount , setTotalAmount] = useState(0);
-
-    useEffect(()=>{
-        setTotalAmount(cart.reduce((acc , cart) =>acc + cart.price , 0))
-    }, [cart])
+    useEffect(() => {
+        setTotalAmount(cart.reduce((acc, cart) => acc + cart.price, 0));
+    }, [cart]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const handelOnCheckout = ()=>{
-        toast.success("Your order is placed 🥳🥳")
-        cart.map((item)=>{
+
+    const handleOnCheckout = () => {
+        toast.success("Your order is placed 🥳🥳");
+        cart.map((item) => {
             dispatch(remove(item.id));
-        })
+        });
         navigate('/');
-    }
-    return(
-        <div className="max-w-5xl mx-auto">
-            {
-                cart.length > 0?
-                (<div className="flex  gap-x-4 flex-wrap">
-                    <div > 
-                         {
-                            cart.map((item )=>{
-                                return <CartItem item={item} key={item.id}/>
-                            })
-                         }
-                    </div>
+    };
 
-                    <div className="min-w-2xl mt-16 flex items-center gap-32 justify-center max-h-[550px] w-full mb-20">
-                        <div>
-                            <div className=" text-green-600 font-semibold text-2xl">
-                                Your Cart
-                            </div>
-                            <div className=" text-green-600 font-semibold text-5xl"> 
-                                Summary 
-                            </div>
-                            <p className="mt-3 ">Total items : {cart.length}</p>
-                        </div>
-                        <div className="mt-11">
-                            <p >Toatal Amount : <span className=" text-black font-semibold ">${TotalAmount}</span></p>
-                            <button  onClick={()=>{handelOnCheckout()}}
-                            className=" bg-green-600 text-white font-bold w-[100%] py-2 rounded-md mt-[10px]">
-                                CheckOut Now
+    return (
+        <div className="container mx-auto px-4 py-8 min-h-[81vh]">
+            <h1 className="text-4xl font-bold mb-8 text-center">Your Shopping Cart</h1>
+            {cart.length > 0 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="lg:col-span-1">
+                        {cart.map((item) => (
+                            <CartItem item={item} key={item.id} />
+                        ))}
+                    </div>
+                    <div className="lg:col-span-1 mt-6 lg:mt-0">
+                        <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+                            <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+                            <p className="text-gray-700 mb-2">Total items: {cart.length}</p>
+                            <p className="text-gray-700 mb-4">Total Amount: ${totalAmount.toFixed(2)}</p>
+                            <button
+                                onClick={handleOnCheckout}
+                                className="bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            >
+                                Proceed to Checkout
                             </button>
                         </div>
-
                     </div>
-                </div>):
-                (
-                    <div className="flex flex-col justify-center items-center gap-3 h-[80vh]">
-                        No Item Found
-                        <NavLink to='/'>
-                            <button className=" bg-green-500 text-white font-bold text-2xl py-3 w-[180px] rounded-md">
-                                Shop Now
-                            </button>
-                        </NavLink>
-                    </div>
-                )
-            }
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-80">
+                    <p className="text-lg font-semibold mb-4">Your cart is empty</p>
+                    <NavLink to="/" className="text-white">
+                        <button className="bg-green-600 text-white font-bold py-3 px-6 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                            Start Shopping
+                        </button>
+                    </NavLink>
+                </div>
+            )}
         </div>
     );
 }

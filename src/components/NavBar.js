@@ -3,7 +3,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 function NavBar() {
-    const cart = useSelector((state) => state.cart); // Modify this line
+    const cart = useSelector((state) => state.cart);
 
     return (
         <div className="bg-slate-900 lg:text-2xl sm:text-xl">

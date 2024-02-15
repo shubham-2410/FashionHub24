@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full ">
       <div className="fixed w-full z-20">
         <NavBar/>
       </div>
